@@ -22,7 +22,8 @@ namespace Modulo3
         // ExecuteReadProcedure(connection);
         // ExecuteScalar(connection);
         // ReadView(connection);
-        OneToOne(connection);
+        // OneToOne(connection);
+        OneToMany(connection);
       }
     }
 
@@ -241,6 +242,38 @@ namespace Modulo3
       {
         Console.WriteLine($"{item.Title} - Curso: {item.Course.Title}");
       }
+    }
+
+    static void OneToMany(SqlConnection connection)
+    {
+      var sql = @"
+      SELECT 
+        [Career].[Id],
+        [Career].[Title],
+        [CareerItem].[CareerId],
+        [CareerItem].[Title]
+      FROM 
+        [Career] 
+      INNER JOIN 
+        [CareerItem] ON [CareerItem].[CareerId] = [Career].[Id]
+      ORDER BY
+        [Career].[Title]
+      ";
+
+      var careers = connection.Query<Career, CareerItem, Career>(
+        sql, (career, item) => {
+          return career;
+        }, splitOn: "Id"
+      );
+
+      foreach (var career in careers)
+      {
+        Console.WriteLine($"{career.Title}");
+        foreach (var item in career.Items)
+        {
+          Console.WriteLine($"- {item.Title}");
+        }
+      }      
     }
   }
 }
