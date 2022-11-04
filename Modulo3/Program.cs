@@ -23,7 +23,8 @@ namespace Modulo3
         // ExecuteScalar(connection);
         // ReadView(connection);
         // OneToOne(connection);
-        OneToMany(connection);
+        // OneToMany(connection);
+        QueryMultiple(connection);
       }
     }
 
@@ -257,23 +258,57 @@ namespace Modulo3
       INNER JOIN 
         [CareerItem] ON [CareerItem].[CareerId] = [Career].[Id]
       ORDER BY
-        [Career].[Title]
-      ";
+        [Career].[Title]";
 
-      var careers = connection.Query<Career, CareerItem, Career>(
-        sql, (career, item) => {
+      var careers = new List<Career>();
+      var items = connection.Query<Career, CareerItem, Career>(
+        sql,
+        (career, item) =>
+        {
+          var car = careers.Where(x => x.Id == career.Id).FirstOrDefault();
+          if (car == null)
+          {
+            car = career;
+            car.Items.Add(item);
+            careers.Add(car);
+          }
+          else
+          {
+            car.Items.Add(item);
+          }
+
           return career;
-        }, splitOn: "Id"
-      );
+        }, splitOn: "CareerId");
 
       foreach (var career in careers)
       {
         Console.WriteLine($"{career.Title}");
         foreach (var item in career.Items)
         {
-          Console.WriteLine($"- {item.Title}");
+          Console.WriteLine($" - {item.Title}");
         }
-      }      
+      }
+    }
+
+    static void QueryMultiple(SqlConnection connection)
+    {
+      var query = "SELECT * FROM [Category]; SELECT * FROM [Course]";
+
+      using (var multi = connection.QueryMultiple(query))
+      {
+        var categories = multi.Read<Category>();
+        var courses = multi.Read<Course>();
+
+        foreach (var item in categories)
+        {
+          Console.WriteLine(item.Title);
+        }
+
+        foreach (var item in courses)
+        {
+          Console.WriteLine(item.Title);
+        }
+      }
     }
   }
 }
