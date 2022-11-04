@@ -19,7 +19,8 @@ namespace Modulo3
         // CreateManyCategories(connection);
         // ListCategories(connection);
         // ExecuteProcedure(connection);
-        ExecuteReadProcedure(connection);
+        // ExecuteReadProcedure(connection);
+        ExecuteScalar(connection);
       }
     }
 
@@ -167,6 +168,43 @@ namespace Modulo3
       {
         Console.WriteLine(item.Id);
       }
+    }
+
+    static void ExecuteScalar(SqlConnection connection)
+    {
+      var category = new Category();
+      category.Title = "Amazon AWS";
+      category.Url = "amazon";
+      category.Description = "Categoria destinada a serviços AWS";
+      category.Order = 8;
+      category.Summary = "AWS Cloud";
+      category.Featured = false;
+
+      var insertSql = @"
+      INSERT INTO 
+        [Category] 
+      OUTPUT inserted.[Id]
+      VALUES(
+        NEWID(), 
+        @Title, 
+        @Url, 
+        @Summary, 
+        @Order, 
+        @Description, 
+        @Featured
+      )";
+
+      var id = connection.ExecuteScalar<Guid>(insertSql, new
+      {
+        category.Title,
+        category.Url,
+        category.Summary,
+        category.Order,
+        category.Description,
+        category.Featured
+      });
+
+      Console.WriteLine($"A categoria inserida foi: {id}");
     }
   }
 }
