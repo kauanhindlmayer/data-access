@@ -20,7 +20,9 @@ namespace Modulo3
         // ListCategories(connection);
         // ExecuteProcedure(connection);
         // ExecuteReadProcedure(connection);
-        ExecuteScalar(connection);
+        // ExecuteScalar(connection);
+        // ReadView(connection);
+        OneToOne(connection);
       }
     }
 
@@ -205,6 +207,40 @@ namespace Modulo3
       });
 
       Console.WriteLine($"A categoria inserida foi: {id}");
+    }
+
+    static void ReadView(SqlConnection connection)
+    {
+      var sql = "SELECT * FROM [vwCourses]";
+      var courses = connection.Query(sql);
+      foreach (var item in courses)
+      {
+        Console.WriteLine($"{item.Id} - {item.Title}");
+      }
+    }
+
+    static void OneToOne(SqlConnection connection)
+    {
+      var sql = @"
+      SELECT
+        *
+      FROM
+        [CareerItem]
+      INNER JOIN
+        [Course] ON [CareerItem].[CourseId] = [Course].[Id]
+      ";
+
+      var items = connection.Query<CareerItem, Course, CareerItem>(
+        sql, (careerItem, course) => {
+          careerItem.Course = course;
+          return careerItem;
+        }, splitOn: "Id"
+      );
+
+      foreach (var item in items)
+      {
+        Console.WriteLine($"{item.Title} - Curso: {item.Course.Title}");
+      }
     }
   }
 }
