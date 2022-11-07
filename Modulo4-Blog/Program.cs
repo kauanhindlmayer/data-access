@@ -11,88 +11,29 @@ namespace Blog
     private const string CONNECTION_STRING = @"Server=localhost,1433;Database=Blog;User ID=sa;Password=1q2w3e4r@#$;Trusted_Connection=False; TrustServerCertificate=True;";
     public static void Main(string[] args)
     {
-      // ReadUsers();
-      // ReadUser();
-      // CreateUser();
-      // UpdateUser();
-      DeleteUser();
+      var connection = new SqlConnection(CONNECTION_STRING);
+      connection.Open();
+      ReadUsers(connection);
+      ReadRoles(connection);
+      connection.Close();
     }
 
-    public static void ReadUsers()
+    public static void ReadUsers(SqlConnection connection)
     {
-      var repository = new UserRepository();
+      var repository = new UserRepository(connection);
       var users = repository.Get();
 
       foreach (var user in users)
         Console.WriteLine(user.Name);
     }
 
-    public static void ReadUser()
+    public static void ReadRoles(SqlConnection connection)
     {
-      using(var connection = new SqlConnection(CONNECTION_STRING))
-      {
-        var user = connection.Get<User>(1);
-        Console.WriteLine(user.Name);
-      }
-    }
+      var repository = new RoleRepository(connection);
+      var roles = repository.Get();
 
-    public static void CreateUser()
-    {
-      var user = new User() 
-      {
-        Bio = "Equipe balta.io",
-        Email = "hello@balta.io",
-        Image = "https://...",
-        Name = "Equipe balta.io",
-        PasswordHash = "HASH",
-        Slug = "equipe-balta"
-      };
-
-      using(var connection = new SqlConnection(CONNECTION_STRING))
-      {
-        connection.Insert<User>(user);
-        Console.WriteLine("Cadastro realizado com sucesso!");
-      }
-    }
-
-    public static void UpdateUser()
-    {
-      var user = new User() 
-      {
-        Id = 2,
-        Bio = "Equipe | balta.io",
-        Email = "hello@balta.io",
-        Image = "https://...",
-        Name = "Equipe de Suporte balta.io",
-        PasswordHash = "HASH",
-        Slug = "equipe-balta"
-      };
-
-      using(var connection = new SqlConnection(CONNECTION_STRING))
-      {
-        connection.Update<User>(user);
-        Console.WriteLine("Atualização realizado com sucesso!");
-      }
-    }
-
-    public static void DeleteUser()
-    {
-      var user = new User() 
-      {
-        Id = 2,
-        Bio = "Equipe | balta.io",
-        Email = "hello@balta.io",
-        Image = "https://...",
-        Name = "Equipe de Suporte balta.io",
-        PasswordHash = "HASH",
-        Slug = "equipe-balta"
-      };
-
-      using(var connection = new SqlConnection(CONNECTION_STRING))
-      {
-        connection.Delete<User>(user);
-        Console.WriteLine("Exclusão realizado com sucesso!");
-      }
+      foreach (var role in roles)
+        Console.WriteLine(role.Name);
     }
   }
 }
