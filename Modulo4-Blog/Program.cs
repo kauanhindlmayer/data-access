@@ -14,8 +14,7 @@ namespace Blog
       var connection = new SqlConnection(CONNECTION_STRING);
       connection.Open();
       ReadUsers(connection);
-      ReadRoles(connection);
-      ReadTags(connection);
+      // CreateUser(connection);
       connection.Close();
     }
 
@@ -25,25 +24,29 @@ namespace Blog
       var items = repository.Get();
 
       foreach (var item in items)
+      {
         Console.WriteLine(item.Name);
+        foreach(var role in item.Roles)
+        {
+          Console.WriteLine($" - {role.Name}");
+        }
+      }
     }
 
-    public static void ReadRoles(SqlConnection connection)
+    public static void CreateUser(SqlConnection connection)
     {
-      var repository = new Repository<Role>(connection);
-      var items = repository.Get();
+      var user = new User {
+        Name = "Kauan",
+        Email = "kauan@gmail.com",
+        PasswordHash = "1qrs4iw8402#",
+        Bio = "Alguma coisa",
+        Image = "dasndas",
+        Slug = "kauan"
+      };
 
-      foreach (var item in items)
-        Console.WriteLine(item.Name);
-    }
-
-    public static void ReadTags(SqlConnection connection)
-    {
-      var repository = new Repository<Tag>(connection);
-      var items = repository.Get();
-
-      foreach (var item in items)
-        Console.WriteLine(item.Name);
+      var repository = new Repository<User>(connection);
+      repository.Create(user);
+      Console.WriteLine($"Usuário {user.Name} criado com sucesso!");
     }
   }
 }
