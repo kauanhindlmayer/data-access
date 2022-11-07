@@ -1,14 +1,16 @@
 using System;
+using Desafio.Models;
+using Desafio.Repositories;
 
-namespace Desafio.Screens.TagScreens
+namespace Desafio.Screens.UserScreens
 {
-  public static class MenuTagScreen
+  public static class MenuUserScreen
   {
     public static void Load()
     {
       Console.Clear();
-      Console.WriteLine("Gestão de tags");
-      Console.WriteLine("--------------");
+      Console.WriteLine("Gestão de Usuários");
+      Console.WriteLine("------------------");
       Console.WriteLine("O que deseja fazer?");
       Console.WriteLine();
       Console.WriteLine("1 - Listar");
@@ -22,16 +24,16 @@ namespace Desafio.Screens.TagScreens
       switch (option)
       {
         case 1:
-          ListTagScreen.Load();
+          ListUserScreen.Load();
           break;
         case 2:
-          CreateTagScreen.Load();
+          CreateUserScreen.Load();
           break;
         case 3:
-          UpdateTagScreen.Load();
+          UpdateUserScreen.Load();
           break;
         case 4:
-          DeleteTagScreen.Load();
+          DeleteUserScreen.Load();
           break;
         default: Load(); break;
       }

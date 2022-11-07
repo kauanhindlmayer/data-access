@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.Data.SqlClient;
 using Desafio.Screens.TagScreens;
+using Desafio.Screens.UserScreens;
 
 namespace Desafio
 {
@@ -38,8 +39,26 @@ namespace Desafio
 
       switch (option)
       {
+        case 1:
+          MenuUserScreen.Load();
+          break;
+        case 2:
+          // MenuUserScreen.Load();
+          break;
+        case 3:
+          // MenuUserScreen.Load();
+          break;
         case 4:
           MenuTagScreen.Load();
+          break;
+        case 5:
+          // MenuUserScreen.Load();
+          break;
+        case 6:
+          // MenuUserScreen.Load();
+          break;
+        case 7:
+          // MenuUserScreen.Load();
           break;
         default: Load(); break;
       }
