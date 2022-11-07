@@ -13,8 +13,9 @@ namespace Blog
     {
       var connection = new SqlConnection(CONNECTION_STRING);
       connection.Open();
-      ReadUsers(connection);
+      // ReadUsers(connection);
       // CreateUser(connection);
+      ReadWithRoles(connection);
       connection.Close();
     }
 
@@ -26,7 +27,7 @@ namespace Blog
       foreach (var item in items)
       {
         Console.WriteLine(item.Name);
-        foreach(var role in item.Roles)
+        foreach (var role in item.Roles)
         {
           Console.WriteLine($" - {role.Name}");
         }
@@ -35,18 +36,28 @@ namespace Blog
 
     public static void CreateUser(SqlConnection connection)
     {
-      var user = new User {
-        Name = "Kauan",
-        Email = "kauan@gmail.com",
-        PasswordHash = "1qrs4iw8402#",
-        Bio = "Alguma coisa",
-        Image = "dasndas",
-        Slug = "kauan"
+      var user = new User()
+      {
+        Name = "Name",
+        Email = "email@balta.io",
+        Bio = "bio",
+        Image = "image",
+        PasswordHash = "hash",
+        Slug = "slug"
       };
-
       var repository = new Repository<User>(connection);
-      repository.Create(user);
-      Console.WriteLine($"Usuário {user.Name} criado com sucesso!");
+    }
+
+    private static void ReadWithRoles(SqlConnection connection)
+    {
+      var repository = new UserRepository(connection);
+      var users = repository.ReadWithRole();
+
+      foreach (var user in users)
+      {
+        Console.WriteLine(user.Email);
+        foreach (var role in user.Roles) Console.WriteLine($" - {role.Slug}");
+      }
     }
   }
 }
