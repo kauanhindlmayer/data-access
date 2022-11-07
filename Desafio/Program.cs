@@ -1,19 +1,21 @@
 ﻿using System;
+using Microsoft.Data.SqlClient;
+using Desafio.Screens.TagScreens;
 
-namespace ConsoleApp
+namespace Desafio
 {
   public class Program
   {
     private const string CONNECTION_STRING = @"Server=localhost,1433;Database=Blog;User ID=sa;Password=1q2w3e4r@#$;Trusted_Connection=False; TrustServerCertificate=True;";
     public static void Main(string[] args)
     {
-      var connection = new SqlConnection(CONNECTION_STRING);
-      connection.Open();
+      Database.Connection = new SqlConnection(CONNECTION_STRING);
+      Database.Connection.Open();
 
       Load();
 
       Console.ReadKey();
-      connection.Close();
+      Database.Connection.Close();
     }
 
     private static void Load()
