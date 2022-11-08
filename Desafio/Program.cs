@@ -2,6 +2,7 @@
 using Microsoft.Data.SqlClient;
 using Desafio.Screens.TagScreens;
 using Desafio.Screens.UserScreens;
+using Desafio.Screens.RoleScreens;
 
 namespace Desafio
 {
@@ -43,7 +44,7 @@ namespace Desafio
           MenuUserScreen.Load();
           break;
         case 2:
-          // MenuUserScreen.Load();
+          MenuRoleScreen.Load();
           break;
         case 3:
           // MenuUserScreen.Load();
